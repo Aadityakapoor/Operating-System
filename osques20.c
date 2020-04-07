@@ -1,49 +1,57 @@
 #include<stdio.h>
-#include<stdbool.h>
-struct requirement
-{
- 	bool pen ;
-	bool paper ;
-	bool question_paper ;
-	bool all_three ;
-};
 int main()
 {
-	int n=3;
-	struct requirement  s[n];
-	s[0].pen=true;		
-	s[0].paper = false;
-	s[0].question_paper = false;
-	s[0].all_three= false;
-	s[1].pen=false;		
-	s[1].paper = true;
-	s[1].question_paper = false;
-	s[1].all_three = false;
-	s[2].pen=false;		
-	s[2].paper = false;
-	s[2].question_paper = true;
-	s[2].all_three = false	;
-	while(s[0].all_three==false||s[1].all_three==false||s[2].all_three==false)
+	int p[20],bt[20], su[20], wt[20],tat[20],i, k, n, temp;
+	float wtavg, tatavg;
+	printf("Enter the number of PROCESS  in the queue --- ");
+	scanf("%d",&n);
+	for(i=0;i<n;i++)
 	{
-		int ch1,ch2;
-		printf("\nResources:\n1.pen\n2.paper\n3.question paper\n Enter the two things which is to be placed on the shared table: ");
-		scanf("%d%d",&ch1,&ch2);
-		if(ch1==1 && ch2==2 && s[2].all_three==false)
+		p[i] = i;
+		printf("Enter the Burst Time for process  %d --- ", i);
+		scanf("%d",&bt[i]);
+		printf("teacher/student process (0/1) ? --- ");
+		scanf("%d", &su[i]);
+	}
+	
+	for(i=0;i<n;i++)
+	{
+		for(k=i+1;k<n;k++)
 		{
-			s[2].all_three=true ;
-			printf("Third Student has completed the task\n");
-		}
-		if(ch1==2 && ch2==3 && s[0].all_three==false)
-		{
-			s[0].all_three=true;
-			printf("First Student has completed the task\n");
-		}
-		if(ch1==1 && ch2==3 && s[1].all_three==false)
-		{
-			s[1].all_three=true;
-			printf("Second Student has completed the task\n");
+			if(su[i] > su[k])
+			{
+				temp=p[i];
+				p[i]=p[k];
+				p[k]=temp;
+				
+				temp=bt[i];
+				bt[i]=bt[k];
+				bt[k]=temp;
+				
+				temp=su[i];
+				su[i]=su[k];
+				su[k]=temp;
+			}
 		}
 	}
-	printf("All the students now have completed their respective tasks succesfully\n");
+	wtavg = wt[0] = 0;
+	tatavg = tat[0] = bt[0];
+	for(i=1;i<n;i++)
+	{
+		wt[i] = wt[i-1] + bt[i-1];
+		tat[i] = tat[i-1] + bt[i];
+		wtavg = wtavg + wt[i];
+		tatavg = tatavg + tat[i];
+	}
+	printf("\nPROCESS\t\t TEACHER/STUDENT PROCESS  \tBURST TIME\tWAITING TIME\tTURNAROUND TIME");
+	
+	for(i=0;i<n;i++)
+	{
+		printf("\n%d \t\t\t\t %d \t\t %d \t\t %d \t\t\t %d ",p[i],su[i],bt[i],wt[i],tat[i]);
+	}
+
+	printf("\nAverage Waiting Time is --- %f",wtavg/n);
+	printf("\nAverage Turnaround Time is --- %f",tatavg/n);
+
 	return 0;
 }
