@@ -86,3 +86,4 @@ void *st1()
 	st[1][4]=1;
 	printf("\n\tStudent 1 has Completed the assignment.\n");	
 	pthread_mutex_unlock(&lock);
+}
